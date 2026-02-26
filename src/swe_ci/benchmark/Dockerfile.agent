@@ -1,0 +1,63 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# ---- configurable parameters ----
+ARG NODE_VERSION
+ARG AGENT_NPM_PKG
+ARG AGENT_BIN
+# ---------------------------------
+
+ARG AGENT_HOME=/opt/agent
+ARG AGENT_WRAPPER=agent
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends ca-certificates curl xz-utils tar dpkg; \
+    \
+    arch="$(dpkg --print-architecture)"; \
+    case "$arch" in \
+        amd64) node_arch="x64" ;; \
+        arm64) node_arch="arm64" ;; \
+        *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
+    esac; \
+    \
+    mkdir -p "${AGENT_HOME}/node" \
+             "${AGENT_HOME}/npm-global" \
+             "${AGENT_HOME}/npm-cache" \
+             "${AGENT_HOME}/home" \
+             "${AGENT_HOME}/cache"; \
+    \
+    curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${node_arch}.tar.xz" -o /tmp/node.tar.xz; \
+    tar -xJf /tmp/node.tar.xz -C "${AGENT_HOME}/node" --strip-components=1; \
+    rm /tmp/node.tar.xz; \
+    \
+    export NPM_CONFIG_PREFIX="${AGENT_HOME}/npm-global"; \
+    export npm_config_cache="${AGENT_HOME}/npm-cache"; \
+    export PATH="${AGENT_HOME}/node/bin:$PATH"; \
+    "${AGENT_HOME}/node/bin/npm" install -g "${AGENT_NPM_PKG}"; \
+    \
+    test -x "${AGENT_HOME}/npm-global/bin/${AGENT_BIN}"; \
+    \
+    rm -rf "${AGENT_HOME}/npm-cache"/*; \
+    rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
+    printf '#!/bin/sh\n\
+set -eu\n\
+BASE="%s"\n\
+export NODE_NO_WARNINGS=1\n\
+export HOME="$BASE/home"\n\
+export XDG_CACHE_HOME="$BASE/cache"\n\
+export NPM_CONFIG_PREFIX="$BASE/npm-global"\n\
+export npm_config_cache="$BASE/npm-cache"\n\
+export PATH="$BASE/node/bin:$BASE/npm-global/bin:$PATH"\n\
+exec "$BASE/npm-global/bin/%s" "$@"\n' \
+    "${AGENT_HOME}" "${AGENT_BIN}" > "/usr/local/bin/${AGENT_WRAPPER}"; \
+    \
+    chmod +x "/usr/local/bin/${AGENT_WRAPPER}"; \
+    if [ "${AGENT_WRAPPER}" != "${AGENT_BIN}" ]; then \
+        ln -s "/usr/local/bin/${AGENT_WRAPPER}" "/usr/local/bin/${AGENT_BIN}"; \
+    fi; \
+    chmod -R 777 "${AGENT_HOME}"
+
+WORKDIR /app

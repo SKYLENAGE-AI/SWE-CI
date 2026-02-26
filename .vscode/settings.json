@@ -1,0 +1,18 @@
+{
+    "python.analysis.exclude": [
+        "data*/**", 
+        "experiments/**", 
+    ],
+    "python.analysis.ignore": [
+        "data*/**", 
+        "experiments/**", 
+    ],
+    "files.watcherExclude": {
+        "data*/**": true,
+        "experiments/**": true,
+    },
+    "search.exclude": {
+        "data*/**": true,
+        "experiments/**": true,
+    }
+}
