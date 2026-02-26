@@ -4,7 +4,7 @@
   [简体中文] | English
 </p>
 
-🔗 HuggingFace 链接: https://huggingface.co/datasets/SWE-CI/SWE-CI
+🔗 HuggingFace 链接: https://huggingface.co/datasets/skylenage/SWE-CI
 
 🔗 论文链接: 即将发布...
 
