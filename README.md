@@ -6,7 +6,7 @@ English | [中文](README_zh.md)
 
 🔗 Paper: https://arxiv.org/pdf/2603.03823
 
-💡 We are developing [Otter](https://github.com/GalenChen320/Otter/tree/main), an agent evaluation framework based on multi-turn environment feedback. SWE-CI will be more comprehensively supported within Otter.
+💡 We are developing [Otter](https://github.com/GalenChen320/Otter/tree/main), an agent evaluation framework based on multi-turn environment feedback. SWE-CI will be more comprehensively supported within Otter in the near future.
 
 ## Introduction
 ![](docs/1.png)

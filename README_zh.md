@@ -6,7 +6,7 @@
 
 🔗 论文链接: https://arxiv.org/pdf/2603.03823
 
-💡 我们正在开发基于多轮环境反馈的 Agent 评测框架 [Otter](https://github.com/GalenChen320/Otter/tree/main)，SWE-CI 将在 Otter 中得到更全面的支持。
+💡 我们正在开发基于多轮环境反馈的 Agent 评测框架 [Otter](https://github.com/GalenChen320/Otter/tree/main)。在不远的将来，SWE-CI 会在 Otter 中得到更全面的支持。
 
 ## 介绍
 ![](docs/1.png)
