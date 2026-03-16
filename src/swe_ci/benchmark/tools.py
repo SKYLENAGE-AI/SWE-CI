@@ -27,7 +27,7 @@ def container_extra_args() -> list[str]:
             )
     if CONFIG.docker.write_bps != "":
         extra_args.extend(
-            ["--device-read-bps", f"{CONFIG.docker.storage_disk}:{CONFIG.docker.write_bps}"]
+            ["--device-write-bps", f"{CONFIG.docker.storage_disk}:{CONFIG.docker.write_bps}"]
             )
     return extra_args
 

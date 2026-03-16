@@ -6,4 +6,4 @@ metadata/
 *.log
 TODO
 config_private.toml
-temp.py
+temp*.py

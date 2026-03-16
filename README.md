@@ -1,17 +1,16 @@
 # SWE-CI: Evaluating Agent Capabilities in Maintaining Codebases via Continuous Integration
 
-<p align="center">
-  [简体中文] | English
-</p>
-
 🔗 HuggingFace 链接: https://huggingface.co/datasets/skylenage/SWE-CI
 
-🔗 论文链接: 即将发布...
+🔗 论文链接: https://arxiv.org/pdf/2603.03823
+
+💡 我们正在开发基于多轮环境反馈的 Agent 评测框架 [Otter](https://github.com/GalenChen320/Otter/tree/main)，SWE-CI 将在不久后迁移至 Otter 作为默认评测平台。
+
+💡 We are building [Otter](https://github.com/GalenChen320/Otter/tree/main), an agent evaluation framework based on multi-turn environment feedback. SWE-CI will migrate to Otter as the default evaluation platform in the near future.
+
 
 ## 介绍
 ![](docs/1.png)
-
-
 
 ### 🏆 SWE-CI 是什么？
 
