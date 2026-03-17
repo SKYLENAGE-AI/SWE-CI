@@ -8,6 +8,10 @@ English | [中文](README_zh.md)
 
 💡 We are developing [Otter](https://github.com/GalenChen320/Otter/tree/main), an agent evaluation framework based on multi-turn environment feedback. SWE-CI will be more comprehensively supported within Otter in the near future.
 
+⚠️ **Clarification**: 
+1. "233 days" refers to the historical span of the **data source** for each task, NOT the actual runtime of the experiment.
+2. "Regression" does not imply persistent deterioration — models may recover from regressions in later iterations.
+
 ## Introduction
 ![](docs/1.png)
 
