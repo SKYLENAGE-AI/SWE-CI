@@ -82,7 +82,7 @@ This metric comprehensively captures the changes in functional correctness acros
 This repository is designed to run on Linux with [iFlow CLI](https://arxiv.org/abs/2512.24873).
 
 ### 💰 Estimated Cost
-Under the following test environment, running the full dataset (full.csv) takes approximately **48 hours**:
+Under the following test environment, this project will take approximately **48 hours** hours to run (default splitting):
 + Hardware: 32-core CPU, 64 GB RAM, ~1 GB/s disk I/O speed
 + Concurrency: 16 concurrent workers
 + API Key: An LLM API key that supports at least 16 concurrent requests.
@@ -107,13 +107,13 @@ pip install -r requirements.txt
 
 ### 🏃 Running
 
-**Download the dataset from Hugging Face:** The dataset must be downloaded from Hugging Face before running experiments for the first time. The full dataset (full.csv) requires approximately 52.8 GB of storage.
+**Download the dataset from Hugging Face:** The dataset must be downloaded from Hugging Face before running experiments for the first time. The dataset requires approximately 50 GB of storage.
 ```bash
 # (Recommended) Download with default parameters
 PYTHONPATH=src python -m swe_ci.download
 
 # (Custom) Download with custom parameters
-# --splitting: Optional, dataset split, default "full"
+# --splitting: Optional, dataset split, default "default"
 # --hf_token: Optional, used to speed up loading, default "none"
 PYTHONPATH=src python -m swe_ci.download \
     --splitting <SPLITTING> \
@@ -125,7 +125,7 @@ PYTHONPATH=src python -m swe_ci.download \
 + The experiment consists of two phases: *task initialization* and *code evolution*. Task initialization takes approximately 30 minutes (with 16 concurrent workers). When system resources are limited, some tasks may time out during initialization. In that case, consider lowering the Docker container resource limits or reducing concurrency, and re-run the command. The code evolution phase (~48 hours) begins only after all tasks have been initialized.
 ```bash
 # --experiment_name Required, a unique string identifying the experiment; reusing the same name enables resuming from checkpoints
-# --splitting Optional, default "full", dataset split; should match the value used during download
+# --splitting Optional, default value = "default", dataset split; should match the value used during download
 # --api_key / --base_url / --model_name Required
 PYTHONPATH=src nohup python -u -m swe_ci.evaluate \
     --experiment_name <EXPERIMENT_NAME> \

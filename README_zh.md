@@ -81,7 +81,7 @@ $$
 ### 🌍 适用性
 仓库基于 Linux 操作系统 和 [iFlow CLI](https://arxiv.org/abs/2512.24873) 运行。
 ### 💰 参考开销
-在以下测试环境下，在全量数据集 (full.csv) 上运行本项目约需 **48 小时**：
+在以下测试环境下，运行本项目约需 **48 小时**（使用默认划分）：
 + 硬件配置：32-core CPU, 64 GB RAM, 约 1 GB/s 磁盘读写速度
 + 并发设置：16 并发
 + API Key：至少 16 个并发请求的 LLM API Key。
@@ -106,13 +106,13 @@ pip install -r requirements.txt
 
 ### 🏃 运行
 
-**从 Hugging Face 下载数据集：** 首次运行试验需要先从 Hugging Face 上下载数据。全量数据集（full.csv）大约需要 52.8Gb 存储空间。
+**从 Hugging Face 下载数据集：** 首次运行试验需要先从 Hugging Face 上下载数据。默认数据集（default.csv）大约需要 50Gb 存储空间。
 ```bash
 # （推荐）使用默认参数下载
 PYTHONPATH=src python -m swe_ci.download
 
 # （个性化）使用自定义参数下载
-# --splitting: 可选，数据集划分，默认值 "full"
+# --splitting: 可选，数据集划分，默认值 "fefault"
 # --hf_token: 可选，用于加速加载，默认值 "none"
 PYTHONPATH=src python -m swe_ci.download \
     --splitting <SPLITTING> \
@@ -124,7 +124,7 @@ PYTHONPATH=src python -m swe_ci.download \
 + 本实验包含 *任务初始化* 和 *代码演进* 两个阶段。任务初始化大约耗时30分钟（并发数=16时）。当系统资源比较紧张时，个别任务可能会初始化超时。此时请适当降低对Docker容器的资源限制或减少并发数并重新执行命令。只有当所有任务完成初始化之后才会进入代码演化阶段（约48小时）。
 ```bash
 # --experiment_name 必填，用于唯一标识该实验的字符串，通过复用 experiment_name 可以实现断点续跑
-# --splitting 可选，默认值 "full"，数据集划分，应与下载时使用的参数保持一致
+# --splitting 可选，默认值 "default"，数据集划分，应与下载时使用的参数保持一致
 # --api_key / --base_url / --model_name 必填
 PYTHONPATH=src nohup python -u -m swe_ci.evaluate \
     --experiment_name <EXPERIMENT_NAME> \
