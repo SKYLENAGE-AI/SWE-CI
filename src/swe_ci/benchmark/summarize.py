@@ -44,7 +44,7 @@ def show_results(
     console.print(table)
 
 
-def test_based_metrics(
+def metrics_func(
         init_pass: int, 
         target_pass: int, 
         evo_seq: int, 
@@ -73,53 +73,22 @@ def test_based_metrics(
         else:
             change = 0
         rela_changes.append(change)
-    m1 = sum([(c + 1) / 2 for c in rela_changes]) / target_len if target_len > 0 else 0.5
+    evo_score = sum([c for c in rela_changes]) / target_len
 
-    if total_gap > 0:
-        m2 = (max(seq_with_init) - init_pass) / total_gap
-    else:
-        m2 = 1.0
-    
-    if init_pass > 0:
-        m3 = min(seq_with_init) / init_pass
-    else:
-        m3 = 1.0
-    
-    m4 = float(max(seq_with_init) == target_pass)
+    solved_rate = float(max(seq_with_init) == target_pass)
 
-    is_monotonic = True
+    zero_regression = True
     for i in range(len(seq_with_init) - 1):
         if seq_with_init[i+1] < seq_with_init[i]:
-            is_monotonic = False
+            zero_regression = False
             break
-    m5 = float(is_monotonic)
+    zero_regression = float(zero_regression)
 
-    overall = (m1 + m2 + m3 + m4 + m5) / 5
     return {
-        "m1": m1, "m2": m2, "m3": m3, "m4": m4, "m5": m5,
-        "overall": overall
+        "EvoScore(gamma=1)": evo_score, 
+        "solved_rate": solved_rate,
+        "zero_regression": zero_regression,
     }
-
-
-def token_based_metrics(
-        architect_tokens: list[int], 
-        programmer_tokens: list[int]
-        ) -> dict:
-    lens = len(architect_tokens)
-    sum_token = sum(architect_tokens) + sum(programmer_tokens)
-    avg_token = sum_token / lens
-    return {
-        "sum_token": sum_token / 1000000, 
-        "avg_token": avg_token / 1000000
-    }
-
-
-def epoch_based_metrics():
-    pass # TODO
-
-
-def code_based_metrics():
-    pass # TODO
 
 
 def summarize() -> None:
@@ -135,16 +104,12 @@ def summarize() -> None:
             results = read_jsonl(iteration_file)
             init_res = results[0]
             evo_res_list = results[1:]
-            metrics = test_based_metrics(
+            metrics = metrics_func(
                 init_pass = init_res["pytest"].get("passed", 0),
                 target_pass = init_res["pytest"].get("passed", 0) + init_res["gap"],
                 evo_seq = [r["pytest"].get("passed", 0) for r in evo_res_list],
                 seq_len = CONFIG.evolve.max_epoch  
                 )
-            # metrics = metrics | token_based_metrics(
-            #     architect_tokens = [r["architect"]["input_tokens"] for r in evo_res_list],
-            #     programmer_tokens = [r["programmer"]["input_tokens"] for r in evo_res_list],
-            # )
         except Exception as e:
             print(
                 f"⚠️ Errror occured when load results from {str(iteration_file)}: {repr(e)}",
