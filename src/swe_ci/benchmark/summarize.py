@@ -91,12 +91,13 @@ def metrics_func(
     }
 
 
-def summarize() -> None:
+def summarize() -> list:
     metadata_path = Path(CONFIG.save_root_dir) / "metadata" / f"{CONFIG.splitting}.csv"
     task_ids = [t["task_id"] for t in read_csv(metadata_path)]
     exp_path = Path("experiments") / CONFIG.experiment_name
     if not exp_path.is_dir():
         raise FileNotFoundError(f"Directory not found: {str(exp_path)}")
+    debug_info = []
     avaliable_ids, task_results = [], []
     for tid in task_ids:
         iteration_file = exp_path / tid / "iteration.jsonl"
@@ -110,10 +111,14 @@ def summarize() -> None:
                 evo_seq = [r["pytest"].get("passed", 0) for r in evo_res_list],
                 seq_len = CONFIG.evolve.max_epoch  
                 )
+            debug_info.append({
+                "task_id": tid,
+                "iterations": results,
+                "metrics": metrics,
+            })
         except Exception as e:
-            print(
+            raise RuntimeError(
                 f"⚠️ Errror occured when load results from {str(iteration_file)}: {repr(e)}",
-                flush=True
                 )
         avaliable_ids.append(tid)
         task_results.append(metrics)
@@ -121,3 +126,4 @@ def summarize() -> None:
     print(f"Total tasks: {len(task_ids)}, avaliable: {len(avaliable_ids)}")
     if len(avaliable_ids) > 0:
         show_results(CONFIG.experiment_name, task_ids, task_results)
+    return debug_info

@@ -1,5 +1,6 @@
 if __name__ == "__main__":
 
+    import json
     from swe_ci.benchmark import init_tasks, run_tasks, summarize
 
     if not init_tasks():
@@ -7,4 +8,13 @@ if __name__ == "__main__":
         exit(0)
     while not run_tasks():
         pass
-    summarize()
+        
+    summary = summarize()
+
+    res = {
+        "score": summary[0]["metrics"]["EvoScore(gamma=1)"],
+        "reason": summary[0]["iterations"]
+    }
+    
+    with open("./summary.json", "w") as f:
+        json.dump(res, f, ensure_ascii=False, indent=4)
