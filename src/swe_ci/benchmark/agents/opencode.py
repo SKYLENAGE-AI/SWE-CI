@@ -22,20 +22,30 @@ def setup_opencode(
         }
     }
 
+    model_entry = {
+        "name": CONFIG.model_name,
+    }
+
+    if hasattr(CONFIG, "llm_options") and CONFIG.llm_options:
+        try:
+            parsed_options = json.loads(CONFIG.llm_options)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"CONFIG.llm_options 不是有效的 JSON 格式: {CONFIG.llm_options!r}") from e
+        model_entry["options"] = parsed_options
+
+
     cfg = {
         "$schema": "https://opencode.ai/config.json",
         "permission": "allow",
         "provider": {
             "custom": {
                 "npm": "@ai-sdk/openai-compatible",
-                "name": "自定义",
+                "name": "custom",
                 "options": {
                     "baseURL": CONFIG.base_url,
                 },
                 "models": {
-                    CONFIG.model_name: {
-                        "name": CONFIG.model_name,
-                    }
+                    CONFIG.model_name: model_entry
                 },
             }
         },
