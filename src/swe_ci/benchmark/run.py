@@ -1,3 +1,4 @@
+import fcntl
 import uuid
 import shutil
 from pathlib import Path
@@ -15,10 +16,30 @@ def _run(
         task_dir: str | Path,
         ):
 
+    task_dir = Path(task_dir)
+
+    # Step 0: Acquire a non-blocking file lock to prevent concurrent execution
+    lock_file = open(task_dir / ".lock", "w")
+    try:
+        fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        lock_file.close()
+        return
+    try:
+        _run_locked(task_metadata, task_dir)
+    finally:
+        fcntl.flock(lock_file, fcntl.LOCK_UN)
+        lock_file.close()
+
+
+def _run_locked(
+        task_metadata: dict,
+        task_dir: Path,
+        ):
+
     # Step 1: Setup task logger
     task_id = task_metadata["task_id"]
     logger = empty_logger(task_id)
-    task_dir = Path(task_dir)
     current_dir = task_dir / "current"
     tmp_dir = task_dir / "tmp"
     handler = file_handler(task_dir / "task.log")
