@@ -72,8 +72,11 @@ def load_config() -> SimpleNamespace:
     pre_parser = argparse.ArgumentParser(add_help=False)
     pre_parser.add_argument("--config_file", default="config.toml", type=str)
     pre_args, unknown = pre_parser.parse_known_args()
-    config_file_path = Path(__file__).resolve().parents[2] / pre_args.config_file
     
+    root_path = Path(__file__).resolve().parents[2]
+    config_file_path = root_path / pre_args.config_file
+    agent_dir = root_path / "src" / "swe_ci" / "benchmark" / "agents"
+
     if not config_file_path.exists():
         print(f"File doesn't exist: {config_file_path}", flush=True)
         sys.exit(1)
@@ -106,14 +109,16 @@ def load_config() -> SimpleNamespace:
         cfg.agent.node_version = getattr(cfg.agent, "node_version", None) or "22.11.0"
         cfg.agent.npm_pkg = getattr(cfg.agent, "npm_pkg", None) or "@iflow-ai/iflow-cli"
         cfg.agent.npm_bin = getattr(cfg.agent, "npm_bin", None) or "iflow"
+        cfg.agent.dockerfile = str(agent_dir / "Dockerfile.iflow")
         if not hasattr(cfg, "iflow") or getattr(cfg.iflow, "auth_type", "") not in ["iflow", "openai-compatible"]:
             print(f"The authentication method for iflow must be 'iflow' or 'openai-compatible'.", flush=True)
             sys.exit(1)
-    elif cfg.agent_name == "claude":
+    elif cfg.agent_name == "opencode":
         if not hasattr(cfg, "agent"): cfg.agent = SimpleNamespace()
-        cfg.agent.node_version = getattr(cfg.agent, "node_version", None) or "22.11.0"
-        cfg.agent.npm_pkg = getattr(cfg.agent, "npm_pkg", None) or "@anthropic-ai/claude-code"
-        cfg.agent.npm_bin = getattr(cfg.agent, "npm_bin", None) or "claude"
+        cfg.agent.node_version = getattr(cfg.agent, "node_version", None) or "22.18.0"
+        cfg.agent.npm_pkg = getattr(cfg.agent, "npm_pkg", None) or "opencode-ai"
+        cfg.agent.npm_bin = getattr(cfg.agent, "npm_bin", None) or "opencode"
+        cfg.agent.dockerfile = str(agent_dir / "Dockerfile.opencode")
     else:
         print(f"Unsupported agent: {cfg.agent_name}", flush=True)
         sys.exit(1)

@@ -175,7 +175,7 @@ def call_cli_agent(
     agent = CONFIG.agent_name
     func_map = {
         "iflow": call_iflow,
-        "claude": call_claude
+        "opencode": call_opencode,
     }
     if agent not in func_map:
         raise NotImplementedError(f"CONFIG.agent = {agent}")

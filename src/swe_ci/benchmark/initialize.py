@@ -62,7 +62,7 @@ def _init(
     try:
         curr_result = cold_test(
             base_image_tar = data_dir / "image.tar.gz", 
-            agent_dockerfile = self_path.parent / "Dockerfile.agent",
+            agent_dockerfile = CONFIG.agent.dockerfile,
             repo_dir = current_dir / "code",
             report_path = current_dir / "test_report.json",
         )
@@ -84,7 +84,7 @@ def _init(
     try:
         target_result = cold_test(
             base_image_tar = data_dir / "image.tar.gz",
-            agent_dockerfile = self_path.parent / "Dockerfile.agent",
+            agent_dockerfile = CONFIG.agent.dockerfile,
             repo_dir = target_dir / "code",
             report_path = target_dir / "test_report.json"
         )

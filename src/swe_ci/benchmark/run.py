@@ -70,7 +70,7 @@ def _run_locked(
         image_tag = container_name = uuid.uuid4().hex[:16]
         build_image_from_dockerfile(
             image_tag, 
-            self_path.parent / "Dockerfile.agent",
+            self_path.parent / CONFIG.agent.dockerfile,
             extra_args = image_extra_args(base_image_tag)
             )
         prompt_file = self_path.parent / "prompt.jinja2"
