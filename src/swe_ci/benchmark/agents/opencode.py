@@ -30,7 +30,7 @@ def setup_opencode(
         try:
             parsed_options = json.loads(CONFIG.llm_options)
         except json.JSONDecodeError as e:
-            raise ValueError(f"CONFIG.llm_options 不是有效的 JSON 格式: {CONFIG.llm_options!r}") from e
+            raise ValueError(f"CONFIG.llm_options is not a valid JSON format: {CONFIG.llm_options!r}") from e
         model_entry["options"] = parsed_options
 
 
