@@ -2,7 +2,7 @@ English | [中文](README_zh.md)
 
 # SWE-CI: Evaluating Agent Capabilities in Maintaining Codebases via Continuous Integration
 
-🔗 HuggingFace: https://huggingface.co/datasets/skylenage/SWE-CI
+🔗 HuggingFace: https://huggingface.co/datasets/skylenage-ai/SWE-CI
 
 🔗 Paper: https://arxiv.org/pdf/2603.03823
 
